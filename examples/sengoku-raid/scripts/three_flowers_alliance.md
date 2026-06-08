@@ -21,8 +21,8 @@ characters: [kagari, kasumi, mio]
 @narrator 「鬼を狩る生き方が、いつ終わるか、私には見えない。だが、終わるその日まで——」
 
 ? それでも、口にしたかった。
-  - 「三人とも、隣にいてくれ」 +kagari +kasumi +mio
-  - 「お主たちと共に死ぬ覚悟を、私は持っている」 +2kagari +2kasumi +2mio
+  - 「三人とも、隣にいてくれ」 -> +kagari +kasumi +mio
+  - 「お主たちと共に死ぬ覚悟を、私は持っている」 -> +2kagari +2kasumi +2mio
 
 @kagari 私の槍は、お主の刀の後ろを守る。
 

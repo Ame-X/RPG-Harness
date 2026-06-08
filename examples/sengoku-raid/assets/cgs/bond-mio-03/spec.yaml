@@ -1,0 +1,27 @@
+kind: cg
+description: |
+  澪との邦絆頂点 CG。夕暮れ、隅田河の岸辺。二人とも水際に膝をつき、
+  水面を覗き込む。映る二つの影——澪の影は揺れず澪自身より若く、
+  主人公の影は半分が黒く滲んでいる。最も近い距離。
+prompt: |
+  Cinematic anime visual novel CG, simplified colors, bold cel shading,
+  high contrast, large readable silhouettes for chafa/TUI conversion.
+  Riverbank at dusk. Mio, a composed young woman in a deep indigo
+  over-robe, kneels at the water's edge beside the kneeling unseen
+  protagonist, both looking down into the still water. Two reflections
+  float on the surface: hers calm and youthful, the protagonist's with
+  one half darkened/smudged in shadow. Quiet, intimate, melancholy mood.
+  Cold-warm dusk light, limited palette, clean background masses, 16:9.
+placeholder: "[CG] 夕の岸辺、澪と並んで水を覗く——影は半分黒い"
+refs:
+  characters: [ mio, player ]
+  location: riverbank
+  time: 夕
+size_hint:
+  tui: { cols: 80, rows: 30 }
+  web: { aspect: "16:9" }
+tags: [ bond, route-peak, mio ]
+tui_render:
+  symbols: half
+  colors: "16"
+  dither: diffusion

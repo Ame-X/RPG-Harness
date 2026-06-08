@@ -8,6 +8,8 @@ requires:
     - { switch: { name: befriended_kasumi } }
 ---
 
+:cg assets/cgs/bond-kasumi-03
+
 朝。山際の道。
 
 @kasumi あんた、戻り際の足音、私と合ってきた。
@@ -32,5 +34,7 @@ requires:
 @kasumi あんたが鹿の道を歩けるようになったら、私の役目は終わる。
 
 @kasumi それまでは——隣にいる。
+
+:hide-cg
 
 [end]

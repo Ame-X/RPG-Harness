@@ -8,6 +8,8 @@ requires:
     - { switch: { name: befriended_mio } }
 ---
 
+:cg assets/cgs/bond-mio-03
+
 夕暮れ。隅田河の岸辺。
 
 @mio 一度、二人で水面を覗かせてもらえるか。
@@ -34,5 +36,7 @@ requires:
 @mio 公儀の沙汰がどう下ろうと——私の鏡には、お主は未だ堕ちず。
 
 @mio それを覚えておいてくれ。
+
+:hide-cg
 
 [end]
