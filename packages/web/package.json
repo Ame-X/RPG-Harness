@@ -1,0 +1,27 @@
+{
+  "name": "@rpg-harness/web",
+  "version": "0.0.0",
+  "description": "Browser (React DOM) frontend for RPG-Harness — the engine bundled in-tab, games baked at build time, saves in the browser. Same engine + same screen-model reducer as the TUI, different shell.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@rpg-harness/engine": "workspace:*",
+    "@rpg-harness/frontend-core": "workspace:*",
+    "@rpg-harness/parser": "workspace:*",
+    "buffer": "^6.0.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.0",
+    "vite": "^5.4.0"
+  },
+  "license": "MIT"
+}

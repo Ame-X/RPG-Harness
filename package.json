@@ -9,12 +9,14 @@
   "scripts": {
     "rpgh": "bun packages/cli/src/bin.ts",
     "play": "bun packages/cli/src/bin.ts play",
-    "test:unit": "bun test packages/engine packages/parser packages/cli",
+    "test:unit": "bun test packages/engine packages/parser packages/frontend-core packages/cli",
     "test:fixtures": "bun packages/cli/src/bin.ts test examples/hook-test && bun packages/cli/src/bin.ts test examples/eject-test && bun packages/cli/src/bin.ts test examples/sengoku-raid",
     "test:validate-negative": "bash scripts/test-validate-negative.sh",
     "test": "bun run test:unit && bun run test:fixtures && bun run test:validate-negative",
     "autoplay": "bun packages/cli/src/bin.ts autoplay examples/sengoku-raid --persona extractor -v",
-    "typecheck": "bunx tsc -p packages/engine/tsconfig.json --noEmit && bunx tsc -p packages/parser/tsconfig.json --noEmit && bunx tsc -p packages/cli/tsconfig.json --noEmit && bunx tsc -p packages/studio/tsconfig.json --noEmit"
+    "dev:web": "bun run --filter='@rpg-harness/web' dev",
+    "build:web": "bun run --filter='@rpg-harness/web' build",
+    "typecheck": "bunx tsc -p packages/engine/tsconfig.json --noEmit && bunx tsc -p packages/parser/tsconfig.json --noEmit && bunx tsc -p packages/frontend-core/tsconfig.json --noEmit && bunx tsc -p packages/cli/tsconfig.json --noEmit && bunx tsc -p packages/studio/tsconfig.json --noEmit && bunx tsc -p packages/web/tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@rpg-harness/cli": "workspace:*",

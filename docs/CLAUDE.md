@@ -6,11 +6,13 @@ This file is for AI co-authors (Claude Code, Cursor, …) picking up this codeba
 
 A headless RPG Maker — an AI-first coding harness for GalGame-shaped games. A game is a folder. The engine runs in a terminal via ink; the same engine drives a web frontend and a JSON-in/JSON-out test harness. The engine owns universal pieces (typed resources, Condition DSL, 15 lifecycle hooks, reactive triggers, one write path); each game owns its mechanics via `modules/*.ts` and, optionally, an ejected `preset/run.ts`.
 
-Three packages, never cross-import internals:
+Five packages, never cross-import internals:
 
 - `@rpg-harness/engine` — pure state machine. No React, no DOM, no Node-specific APIs (no `fs`, no `process`). Pure data in, pure events out. Owns the standard resource schemas (characters / items / enemies / weapons / skills), the Condition DSL, StateDelta, the Module interface (action handlers + 15 lifecycle hooks + reactive triggers), and the primitives that compose into preset loops.
 - `@rpg-harness/parser` — markdown + YAML frontmatter → Game AST. One file per resource type.
+- `@rpg-harness/frontend-core` — renderer-agnostic. The `screen-model` reducer (`applyOutput` / `applyUiAction`): projects the engine's `Output` stream into a stable `ScreenModel` (one current stage + a backlog + visuals). Imported by **both** frontends; depends only on engine types. No React, no ink, no DOM.
 - `@rpg-harness/cli` — terminal frontend (ink) + loader + test harness + `init --eject`.
+- `@rpg-harness/web` — browser frontend (React DOM). Static: the engine bundles into the page, games are baked at build time (`src/loadGame.ts`, the browser twin of the CLI loader), saves go to localStorage. Renders the same `frontend-core` ScreenModel the CLI does, with DOM components instead of ink.
 
 ## Hard rules
 
@@ -77,6 +79,9 @@ packages/parser/src/
   condition.ts          Condition DSL parser (mirror of evaluator)
   inline-effects.ts     effects: blocks inside scripts / actions
 
+packages/frontend-core/src/
+  screen-model.ts       Output → ScreenModel reducer (applyOutput / applyUiAction); shared by cli + web
+
 packages/cli/src/
   index.ts              `rpgh` binary entry — argv routing
   loader.ts             game-folder → Game (calls parsers, dynamic-imports modules + preset)
@@ -85,7 +90,16 @@ packages/cli/src/
   init.ts               `rpgh init --preset --eject`
   test.ts               fixture runner
   autoplay.ts           persona-driven headless playthrough
+  stage-input.ts        (current stage + keypress) → engine Input / UI action
   components/           ink widgets
+
+packages/web/src/
+  loadGame.ts           browser twin of loader.ts: import.meta.glob → Game (+ asset URLs)
+  WebPlayScreen.tsx     engine pump + DOM stage rendering (mirrors cli PlayScreen)
+  VisualLayer.tsx       bg / portraits / cg as <img> from build-time asset URLs
+  session.ts            localStorage save/load (per-game slot)
+  polyfill.ts           Buffer shim (gray-matter needs it in the browser)
+  App.tsx               game picker + resume/new-game wiring
 
 examples/
   sengoku-raid/         flagship: extraction-shooter raid loop + GalGame bonds, 13/15
@@ -197,5 +211,7 @@ Engine PRs are warranted for: new standard resource types, new hook points, new 
 ## Deferred / not yet implemented
 
 - **States** (buff/debuff as a 5th typed resource) — tick mechanic + duration semantics are non-trivial; deferred until a game needs them.
-- **Save/load surface** — state model supports it (plain JSON), but no CLI command yet.
-- **Web frontend** — engine is ready; React DOM renderer is not built.
+- **Save/load surface** — state model supports it (plain JSON). The TUI persists per-session to disk (`packages/cli/src/session.ts`) and the web shell to localStorage (`packages/web/src/session.ts`), but there's no explicit save/load *command* (named slots, export/import) yet.
+
+Landed since this list was last cut:
+- **Web frontend** — `packages/web` is a static React DOM shell. The engine bundles into the page (no backend); games are baked at build time via `import.meta.glob` (`src/loadGame.ts`, the browser twin of the CLI loader); saves go to localStorage. It shares the engine and the `@rpg-harness/frontend-core` `screen-model` reducer with the TUI — only the renderer (DOM vs ink) and the three fs-vs-browser seams (loadGame / saves / no hot-reload) differ. See `packages/web/README.md`.

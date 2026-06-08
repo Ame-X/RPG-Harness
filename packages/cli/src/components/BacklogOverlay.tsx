@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Text, useInput, useStdout } from "ink";
-import type { BacklogEntry } from "../screen-model";
+import type { BacklogEntry } from "@rpg-harness/frontend-core";
 import { GameLayout } from "./GameLayout";
 
 interface Props {

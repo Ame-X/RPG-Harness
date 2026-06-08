@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Text } from "ink";
 import type { ChoicePresenter, ChoicePresenterProps } from "./types";
-import { findAvailableFrom } from "../screen-model";
+import { findAvailableFrom } from "@rpg-harness/frontend-core";
 import { parseDigitKey } from "./shared";
 
 // Default presenter — a vertical list. Mirrors the pre-presenter

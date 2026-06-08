@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Text } from "ink";
 import type { ChoicePresenter, ChoicePresenterProps } from "./types";
-import { findAvailableFrom } from "../screen-model";
+import { findAvailableFrom } from "@rpg-harness/frontend-core";
 import { parseDigitKey } from "./shared";
 
 // 2-column grid presenter. Row-major fill: options 1,2 land on row 1;

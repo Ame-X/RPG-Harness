@@ -76,10 +76,12 @@ The AI discovers the format on its own. To enable this in a game folder created 
 ```
 rpg-harness/
 ├── packages/
-│   ├── engine/    Pure state-machine runtime. No DOM, no Node-specific APIs.
-│   ├── parser/    Markdown + frontmatter + YAML fence → engine AST.
-│   ├── cli/       The `rpgh` binary: init / play / step / peek / autoplay / test / sessions / assets / studio.
-│   └── studio/    Browser-based asset workbench (chafa render loop, spec editor).
+│   ├── engine/         Pure state-machine runtime. No DOM, no Node-specific APIs.
+│   ├── parser/         Markdown + frontmatter + YAML fence → engine AST.
+│   ├── frontend-core/  Renderer-agnostic Output→ScreenModel reducer, shared by every shell.
+│   ├── cli/            The `rpgh` binary: init / play / step / peek / autoplay / test / sessions / assets / studio.
+│   ├── web/            Browser (React DOM) shell — engine bundled in-tab, games baked at build time, saves in localStorage. Static; deployable to any host.
+│   └── studio/         Browser-based asset workbench (chafa render loop, spec editor).
 ├── examples/
 │   ├── sengoku-raid/    "妖刀奇譚" — bundled flagship. Extraction-shooter raid loop +
 │   │                    GalGame bonds + 3 endings + most of the engine surface
@@ -347,8 +349,11 @@ if you're an AI playing the games.
 
 Pre-alpha. Works end-to-end. Hub-mode TUI with multi-save and live hot-reload,
 markdown content authoring, headless step API, fixture testing, built-in autoplay
-personas, AI player + author skills, and a scaffold command (`rpgh init`) are
-all landed. Combat/training modules, web frontend, and plugin registry are next.
+personas, AI player + author skills, a scaffold command (`rpgh init`), and a
+static **web frontend** (engine bundled in-tab, games baked at build time, saves
+in localStorage — same engine + same screen-model reducer as the TUI; see
+`packages/web/`) are all landed. Combat/training modules and a plugin registry
+are next.
 
 ## License
 

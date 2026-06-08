@@ -1,0 +1,15 @@
+{
+  "name": "@rpg-harness/frontend-core",
+  "version": "0.0.0",
+  "description": "Renderer-agnostic frontend core for RPG-Harness — the Output→ScreenModel reducer shared by every shell (ink, DOM).",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@rpg-harness/engine": "workspace:*"
+  },
+  "license": "MIT"
+}

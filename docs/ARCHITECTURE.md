@@ -62,6 +62,16 @@ while (true) {
 
 The engine doesn't know whether the output ends up in a terminal, a browser, or a JSON stream. That is the frontend's job.
 
+## Frontends
+
+A frontend is whatever consumes the `Output` stream and produces `Input`. Two ship today, and they share more than the engine:
+
+- **`@rpg-harness/frontend-core`** owns the renderer-agnostic middle: a pure reducer (`applyOutput` / `applyUiAction`) that projects the `Output` stream into a stable `ScreenModel` — exactly one current stage (what the player looks at now) plus a capped backlog and the persistent visual stack. Neither React nor ink nor the DOM appears here; it depends only on engine types.
+- **`@rpg-harness/cli`** renders that ScreenModel with ink, reads the keyboard, loads games from the filesystem, and saves sessions to disk.
+- **`@rpg-harness/web`** renders the *same* ScreenModel with React DOM, reads clicks, and — because the engine is a pure no-Node state machine — bundles the engine into the page itself (the way a web console emulator bundles its core into JS). Games are baked at build time via `import.meta.glob` (`loadGame.ts` is the browser twin of the CLI's fs loader); saves go to localStorage. The result is a static site: one `vite build`, deploy anywhere, no backend.
+
+So the axes are orthogonal: **engine** (one, shared) × **renderer** (ink | DOM, both over `frontend-core`) × **game-delivery seam** (fs loader | build-time bake). Same game folder + different renderer → same game, different shell. See `packages/web/README.md` for the web specifics.
+
 ## Two play modes
 
 Both modes go through the same engine, but they wrap it differently:

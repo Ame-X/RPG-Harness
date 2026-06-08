@@ -20,7 +20,7 @@ import {
   makeErrorModel,
   type ScreenModel,
   type UiAction,
-} from "../screen-model";
+} from "@rpg-harness/frontend-core";
 import { dispatchStageInput, footerHintFor } from "../stage-input";
 import { clearRenderingCache } from "./stages/visual/assetRender";
 import { BacklogOverlay } from "./BacklogOverlay";

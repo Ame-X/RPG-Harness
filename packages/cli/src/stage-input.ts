@@ -1,5 +1,5 @@
 import type { Input } from "@rpg-harness/engine";
-import type { Stage, UiAction } from "./screen-model";
+import type { Stage, UiAction } from "@rpg-harness/frontend-core";
 import { getChoicePresenter } from "./presenters";
 
 // Pure mapping from (current stage + keypress) → KeyResult. Two flavors:

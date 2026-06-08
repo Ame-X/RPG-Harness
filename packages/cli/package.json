@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@rpg-harness/engine": "workspace:*",
+    "@rpg-harness/frontend-core": "workspace:*",
     "@rpg-harness/parser": "workspace:*",
     "ink": "^5.0.1",
     "react": "^18.3.1",
