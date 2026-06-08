@@ -9,6 +9,8 @@ requires:
     - { characterStat: { character: player, name: spectral, max: 49 } }
 ---
 
+:cg assets/cgs/letter-02-rival
+
 @narrator 七度目の出帰り。蔵を出ると、大名府の中庭に若い妖刀使いが一人、片膝をついている。
 
 @narrator 深い藍の打掛。腰には家伝の脇差。
@@ -36,9 +38,11 @@ requires:
 @mio 互いに身を守れ。それでよいか。
 
 ? それでよい。
-  - 「同行を頼む」 +1mio
+  - 「同行を頼む」 -> +1mio
   - 「断る術はあるか」
   - （無言で頷く）
+
+:hide-cg
 
 ```yaml
 type: effects

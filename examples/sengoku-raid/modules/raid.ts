@@ -131,6 +131,11 @@ interface MapInstance {
   };
   encounterCleared: boolean;
   pendingLoot: Record<string, number>;
+  // Set once this zone's encounter has been rolled — either on first
+  // arrival, or earlier by 澪's 水鏡 scry while still in a neighbouring
+  // zone. The guard keeps a scouted enemy truthful: the actual arrival
+  // must not re-roll and contradict what the player was shown.
+  encounterRolled?: boolean;
 }
 
 // One raid (a single "expedition" from edo_castle through a chain of maps).
@@ -1707,6 +1712,62 @@ const useChinkonhoHandler: ActionHandler = (ctx) => {
   };
 };
 
+// 澪同行者 passive — 水鏡: standing in one zone she reads the water /
+// blade-sheen and scouts whichever enemy waits in each connected,
+// not-yet-entered zone. We roll + persist those encounters now (the
+// MapInstance.encounterRolled guard keeps the preview truthful — the
+// real arrival won't re-roll). Pushes a narration; returns nothing.
+function mioScry(ctx: Ctx, fromMap: MapDef): void {
+  const seen: string[] = [];
+  for (const conn of fromMap.connections ?? []) {
+    const nextMap = getMap(ctx, conn.target);
+    if (!nextMap) continue;
+    const inst = ensureMapInstance(ctx, conn.target);
+    if (inst.visited) continue; // already walked — nothing to foretell
+    if (!inst.encounterRolled) {
+      inst.encounter = rollEncounter(ctx, nextMap);
+      inst.encounterRolled = true;
+    }
+    seen.push(
+      inst.encounter
+        ? `${nextMap.name}に${enemyName(ctx, inst.encounter.enemyId)}が一匹`
+        : `${nextMap.name}は澄んでいる`,
+    );
+  }
+  if (seen.length > 0) {
+    ctx.state.runtime.pendingNarrations.push(
+      `澪が刀身を水平にし、流れに映す。「水鏡に問う——」${seen.join("、")}。`,
+    );
+  }
+}
+
+// 同行道中の一幕 — on reaching a quiet (no-encounter) new zone with a
+// companion in party, play that companion's next unseen "on the road"
+// scene. Two tiers, in order:
+//   road_<id>    — first time out together (gate: !road_<id>_seen)
+//   road_<id>_2  — deeper, after surviving a raid together
+//                  (gate: befriended_<id> && !road_<id>_2_seen)
+// Each scene's own effects block sets its `_seen` switch + grants
+// affection, so neither re-fires. Returns true if a scene was launched
+// (caller returns early, same contract as the character_spawns path).
+function maybeLaunchRoadScene(ctx: Ctx): boolean {
+  const m = moduleState(ctx);
+  if (!m.companion) return false;
+  const id = m.companion;
+  const sw = ctx.state.baseline.switches;
+  const launch = (scriptId: string): boolean => {
+    if (!ctx.game.scripts.some((s) => s.id === scriptId)) return false;
+    ctx.state.baseline.currentScriptId = scriptId;
+    ctx.state.baseline.beatIndex = 0;
+    return true;
+  };
+  if (sw[`road_${id}_seen`] !== true) return launch(`road_${id}`);
+  if (sw[`befriended_${id}`] === true && sw[`road_${id}_2_seen`] !== true) {
+    return launch(`road_${id}_2`);
+  }
+  return false;
+}
+
 const moveHandler: ActionHandler = (ctx) => {
   const blocker = combatBlock(ctx);
   if (blocker) return denial(blocker);
@@ -1745,7 +1806,13 @@ const moveHandler: ActionHandler = (ctx) => {
   }
   inst.visited = true;
   inst.pendingLoot = rollLoot(ctx, targetMap);
-  inst.encounter = rollEncounter(ctx, targetMap);
+  // 澪's 水鏡 scry may already have rolled this zone's encounter from a
+  // neighbouring zone — honour that roll so the scouted enemy is what
+  // actually appears (see MapInstance.encounterRolled).
+  if (!inst.encounterRolled) {
+    inst.encounter = rollEncounter(ctx, targetMap);
+    inst.encounterRolled = true;
+  }
 
   // Character spawn check. If a rule fires, launch the encounter
   // script instead of narrating map entry.
@@ -1756,6 +1823,9 @@ const moveHandler: ActionHandler = (ctx) => {
     ctx.state.baseline.beatIndex = 0;
     return {};
   }
+
+  // 澪同行者 passive: scout the connected zones ahead (pushes narration).
+  if (m.companion === "mio") mioScry(ctx, targetMap);
 
   if (inst.encounter) {
     const intro = getEnemyNarration(ctx, inst.encounter.enemyId, "intro");
@@ -1771,6 +1841,11 @@ const moveHandler: ActionHandler = (ctx) => {
     }
     return {};
   }
+
+  // Quiet zone — chance for a one-time 同行 road scene before the player
+  // moves on. Launching a script returns early (same as character_spawns).
+  if (maybeLaunchRoadScene(ctx)) return {};
+
   return { narrations: [`${targetMap.name}に出る。静かだ。`] };
 };
 

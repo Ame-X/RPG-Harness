@@ -8,6 +8,8 @@ requires:
     - { switch: { name: befriended_kasumi } }
 ---
 
+:cg assets/cgs/bond-kasumi-03
+
 朝。山際の道。
 
 @kasumi あんた、戻り際の足音、私と合ってきた。
@@ -25,12 +27,14 @@ requires:
 @kasumi ほら、鹿が教えてくれる。鬼の通り道は、ここじゃない。
 
 ? それでも、聞きたかった。
-  - 「あんたは、なぜ私と歩く」 +kasumi
-  - 「猟師は、いつ刀を持つ」 +kasumi
-  - 「鹿の道を、私にも教えてくれ」 +2kasumi
+  - 「あんたは、なぜ私と歩く」 -> +kasumi
+  - 「猟師は、いつ刀を持つ」 -> +kasumi
+  - 「鹿の道を、私にも教えてくれ」 -> +2kasumi
 
 @kasumi あんたが鹿の道を歩けるようになったら、私の役目は終わる。
 
 @kasumi それまでは——隣にいる。
+
+:hide-cg
 
 [end]

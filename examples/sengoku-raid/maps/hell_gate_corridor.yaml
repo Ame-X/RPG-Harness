@@ -6,8 +6,9 @@ connections:
   - { dir: 奥, target: hell_gate_mirror_pool }
   - { dir: 戻る, target: hell_gate_mouth }
 encounter_table:
-  - { enemy: kijin, weight: 60 }
-  - { enemy: oni_warrior, weight: 40 }
+  - { enemy: kijin, weight: 50 }
+  - { enemy: kagami_oni, weight: 30 }
+  - { enemy: oni_warrior, weight: 20 }
 loot_table:
   - { item: cursed_blade_fragment, min: 1, max: 2, weight: 70 }
   - { item: oni_horn, min: 2, max: 4, weight: 30 }

@@ -6,6 +6,10 @@ modules:
 switches:
   learnedChinkonho: false
   learnedHayagake: false
+  # 澪の bond_mio_02 で伝授される「水鏡」。chinkonho / hayagake と
+  # 対になる三つ目の邦絆技能フラグ。hell_gate chain の解錠は
+  # knownSkills を直接読むが、他二技と揃える形でスイッチも立てる。
+  learnedMizukagami: false
   # Companion currently in party (one of three exclusive). Flipped by
   # the invite_<id> hub action; cleared on raid end. Read by raid menu
   # passives + onActionDispatch veto guard.
@@ -30,6 +34,17 @@ switches:
   chose_court_silent: false   # 黙して退く（隠遁）
   # 三花の盟 — 三人とも befriended なら milestone trigger 経由で誓う
   three_flowers_pledged: false
+  # 同行道中の一幕 — 各同行者と初めて静かな新 zone に着いた時に一度だけ
+  # 流れる road_<id> シーンを観たら立つ。moveHandler が switch を見て
+  # 再発火を防ぐ（シーンの effects ブロック自身が立てる）。
+  road_kagari_seen: false
+  road_kasumi_seen: false
+  road_mio_seen:    false
+  # 同行道中の二幕目 — befriended（一度生還を共にした）後に解錠される、より
+  # 踏み込んだ道中シーン road_<id>_2。一幕目を観た後の静かな zone で流れる。
+  road_kagari_2_seen: false
+  road_kasumi_2_seen: false
+  road_mio_2_seen:    false
 
 variables:
   # Raid counters — incremented by endRaidExtract / endRaidFailure.

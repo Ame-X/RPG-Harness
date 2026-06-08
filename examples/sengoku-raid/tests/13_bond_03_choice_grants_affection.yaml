@@ -1,0 +1,43 @@
+name: bond_*_03 の選択肢 inline 加成が効く（-> 矢印修正の回帰）
+description: |
+  bond_<id>_03 の選択肢は元々 `- 「…」 +2kasumi`（矢印無し）で書かれており、
+  parseChoiceBlock は `->` の後ろしか effects を読まないため affection が
+  全く加算されていなかった。`-> +2kasumi` 形へ修正した回帰テスト。
+  hub から script:bond_kasumi_03 を dispatch（affection6 + befriended で解錠）、
+  最後の +2 肢（index2）を選び、affection 6→8 を確認。bond_kasumi_03 に
+  effects ブロックは無いので、増分は選択肢のみ由来。
+state:
+  baseline:
+    completedScripts:
+      - 000_intro
+    characters:
+      kasumi:
+        stats: { affection: 6 }
+    switches:
+      befriended_kasumi: true
+  sengoku-raid:
+    raid: null
+    metCharacters:
+      - kasumi
+inputs:
+  - { type: doActivity, id: "script:bond_kasumi_03" }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: choose, index: 2 }   # 「鹿の道を、私にも教えてくれ」 +2kasumi
+  - { type: next }
+  - { type: next }
+  - { type: next }
+assertions:
+  - kind: state
+    path: baseline.completedScripts
+    includes: bond_kasumi_03
+  # 6 (seed) + 2 (choice, index2) = 8 — proves the inline `-> +2kasumi` applies
+  - kind: state
+    path: baseline.characters.kasumi.affection
+    eq: 8

@@ -1,0 +1,63 @@
+name: 同行 passive：澪の水鏡が、接続する未踏 zone の鬼を先んじて見通す
+description: |
+  澪を同行させて新 zone に着くと、mioScry が接続先の未踏 zone の encounter を
+  先んじて roll + 永続化する（MapInstance.encounterRolled）。これで「水鏡に
+  映る」ナレーションが嘘にならない——実際に踏み込んでも再 roll されない。
+  crossroads は shrine / ruined_hut / deep_grove に接続。kagari は metCharacters
+  に入れて crossroads の spawn を抑止、road_mio_seen:true で道中シーンも抑止し、
+  scry の効果を単独で観測する。
+state:
+  baseline:
+    completedScripts:
+      - 000_intro
+    weapons:
+      ancestor_yaodao: { power: 6 }
+    characters:
+      player:
+        stats: { hp: 30, mental: 8, spectral: 10, intellect: 5 }
+      mio:
+        stats: { affection: 5 }
+    switches:
+      companion_mio: true
+      road_mio_seen: true
+    currentMapId: kuro_swamp_edge
+  sengoku-raid:
+    metCharacters:
+      - kagari
+      - mio
+    companion: mio
+    companionHp: 10
+    raid:
+      chain: kuro_swamp
+      entryMapId: kuro_swamp_edge
+      turnsTaken: 0
+      pendingLoot: {}
+      visited:
+        kuro_swamp_edge:
+          visited: true
+          searched: false
+          encounter: null
+          encounterCleared: false
+          pendingLoot: {}
+        kuro_swamp_crossroads:
+          visited: false
+          searched: false
+          encounter: null
+          encounterRolled: true
+          encounterCleared: false
+          pendingLoot: {}
+inputs:
+  - { type: doActivity, id: "move:kuro_swamp_crossroads" }
+  - { type: next }
+  - { type: next }
+assertions:
+  # scry rolled + persisted the connected unvisited zones ahead of time
+  - kind: state
+    path: sengoku-raid.raid.visited.kuro_swamp_shrine.encounterRolled
+    eq: true
+  - kind: state
+    path: sengoku-raid.raid.visited.kuro_swamp_deep_grove.encounterRolled
+    eq: true
+  - kind: state
+    path: baseline.currentMapId
+    eq: kuro_swamp_crossroads

@@ -8,6 +8,8 @@ requires:
     - { variable: { name: pulse_oni, min: 8 } }
 ---
 
+:cg assets/cgs/ending-oni-self
+
 @narrator お主は公儀に刀を抜いた。そして、鬼の脈に染まり切った。
 
 @narrator 砲響山——火口の北壁。岩のひびが、お主の目には、明らかに口を開けている。

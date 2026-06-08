@@ -1,0 +1,25 @@
+kind: cg
+description: |
+  霞と並んで山際を行く同行 CG。霞が地面の獣道の跡を指差し、
+  振り向いて笑う。弓を背に、明るい目。鹿の蹄の跡が土に残る。
+prompt: |
+  Cinematic anime visual novel CG, simplified colors, bold cel shading,
+  high contrast, large readable silhouettes for chafa/TUI conversion.
+  Daytime forest-edge trail. Kasumi, a young huntress with a longbow on
+  her back in practical hunting clothes, crouches and points at deer
+  tracks in the dirt while looking back over her shoulder with a bright
+  smile toward the unseen protagonist. Dappled light through trees,
+  limited palette, clean background masses, 16:9.
+placeholder: "[CG] 山際、霞が獣道の跡を指して振り向き笑う"
+refs:
+  characters: [ kasumi, player ]
+  location: mountain-trail
+  time: 昼
+size_hint:
+  tui: { cols: 80, rows: 30 }
+  web: { aspect: "16:9" }
+tags: [ companion, road-scene, kasumi ]
+tui_render:
+  symbols: half
+  colors: "16"
+  dither: diffusion

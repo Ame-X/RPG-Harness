@@ -30,7 +30,7 @@ rpgh test .                                  # fixture 回帰（31 個）
 | 軸 | 内容 | 引擎特性 |
 |---|---|---|
 | **A — 密書主線** | 将軍からの三通の密書が raidsCompleted を区切り、お主の選択を結審する | `once: true` triggers + composite `all` + variable: string |
-| **B — 同行者** | 篝 / 霞 / 澪 を raid に誘う。各々 passive を提供、半分のダメージを引き受ける | onActionDispatch first-wins + onBeatBefore reducer + onChoicePresented reducer |
+| **B — 同行者** | 篝 / 霞 / 澪 を raid に誘う。各々 passive を提供、半分のダメージを引き受ける。初めて静かな zone に共に着くと一度だけ「同行道中」のシーンが流れる | onActionDispatch first-wins + onBeatBefore reducer + onChoicePresented reducer + moveHandler script-launch |
 | **C — 鬼の交渉** | 鬼 HP < 30% で「聞く / 逃がす / 妖刀の声に従う」の三択 | selfSwitch + enemy.stats + enemy.custom + composite condition |
 | **D — 妖刀の業** | 勝利毎に「浄 / 鬼 / 凡」の脈絡を選ぶ。三本道で異なる結末 | weapon.custom + weaponPower condition + 3 endings via composite requires |
 | **E — 情報屋** | hub の「両国橋」で 4 段階の情報を買う。intellect が解錠条件 | variable: string + onScriptSelect first-wins |
@@ -64,7 +64,7 @@ rpgh test .                                  # fixture 回帰（31 個）
 | `kuro_swamp`   | 黒沼地 | 1 | `kuro_swamp_edge` | `kuro_swamp_shrine` / `kuro_swamp_deep_grove` | 下級の鬼 | 開幕から |
 | `sumida_river` | 隅田河 | 2 | `sumida_river_bridge_foot` | `sumida_river_ferry_landing` / `sumida_river_under_eaves` | 下級の鬼 + 戦鬼 | 開幕から |
 | `mt_houkyou`   | 砲響山 | 3 | `mt_houkyou_foothills` | `mt_houkyou_burnt_temple` / `mt_houkyou_caldera` | 戦鬼 + 鬼神 (boss) | 開幕から |
-| `hell_gate`    | 地獄門 | 5 | `hell_gate_mouth` | `hell_gate_mirror_pool` | 鬼神 × n | pulse_oni≥8 AND power≥12 AND chinkonho AND mizukagami |
+| `hell_gate`    | 地獄門 | 5 | `hell_gate_mouth` | `hell_gate_mirror_pool` | 鬼神 + 鏡鬼（映し井戸） | pulse_oni≥8 AND power≥12 AND chinkonho AND mizukagami |
 
 各 map は `maps/<chain>_<zone>.yaml`：自分の `bg` / `connections` / `encounter_table` / `loot_table` / `is_extract` / 場合により `character_spawns` を持つ。引擎の `enterMap` primitive がトランジションを駆動（`currentMapId` + `visuals.bg` 同期）。
 
@@ -78,9 +78,13 @@ rpgh test .                                  # fixture 回帰（31 個）
 |---|---|---|---|
 | 篝 | `kuro_swamp_crossroads` / `kuro_swamp_ruined_hut`（`character_spawns` chance=1.0）| 鎮魂法（hub-only、spectral -20）| map 移動毎 spectral -1 |
 | 霞 | `mt_houkyou_stone_paths` / `mt_houkyou_lava_vent` | 早駆け（flee 無傷成功）| 同行中は flee 常時成功 |
-| 澪 | 第二の密書で登場（朝廷監察役）| 水鏡（mizukagami、scry）| —— |
+| 澪 | 第二の密書で登場（朝廷監察役）| 水鏡（mizukagami、scry）| 移動毎、接続する未踏 zone の鬼を先読み（水鏡 scry） |
 
 邦絆ループ：邂逅 → 親密度 ≥2 で `bond_<id>_01` → ≥4 で `bond_<id>_02`（grant skill）→ raid に誘う（switch `companion_<id>`）→ 生還で `befriended_<id>` 立つ → ≥6 + befriended で `bond_<id>_03`（companion 同道）→ 三人とも befriended で `three_flowers_alliance` trigger。
+
+**同行道中シーン**：同行者を連れて raid 中、初めて遭遇の無い静かな新 zone に着くと、その同行者の道中会話が一度だけ自動で流れる。二档ある——`road_<id>`（一幕目）と、befriended（生還を共にした）後に解錠される `road_<id>_2`（二幕目、より踏み込んだ告白）。`moveHandler` が character_spawns と同じ要領で `currentScriptId` をセットして launch、シーン自身の effects ブロックが `road_<id>(_2)_seen` を立てて再発火を止め、親密度を加える。各シーンには `:cg assets/cgs/road-<id>` が付く。同行を「数値バフ」から「道連れの関係」へ寄せるレイヤー。
+
+三人とも `bond_<id>_01 / 02 / 03` の三段が揃っている。澪の `bond_mio_02` が伝授する**水鏡（mizukagami）は hell_gate chain 解錠の四条件の一つ**——澪の邦絆を進めない限り、地獄門は開かない。三技（鎮魂法 / 早駆け / 水鏡）はそれぞれ別のヒロイン経由でしか手に入らない。
 
 ## Loop
 
@@ -132,14 +136,21 @@ depart:<chain>           ───→            chain の entry map に enterMa
 
 唯二 **未挂** の hook：`onNarrationDrain`（性価比低）、`onEndConditionFire`（training preset 専用、我々は使わない）。
 
-## Fixtures（31 個）
+## Fixtures（38 個）
 
 ```
-01–08  legacy（基本骨子 — 開幕状態 / 邂逅 / 邦絆 / 戦闘 / 撤退 / 死亡 / dispatcher guard）
+01–13  legacy + 邦絆 + 同行剧情（開幕状態 / 邂逅 / 邦絆×3 / 戦闘 / 撤退 / 死亡 / dispatcher guard）
+       ├ 09  bond_mio_02 → mizukagami 伝授（澪線補完。05/06 の三人目ミラー）
+       ├ 10  road_kagari → 静かな zone で同行道中シーン launch + 選択肢 affection
+       ├ 11  澪 水鏡 scry → 接続未踏 zone の encounter を先 roll + 永続化
+       ├ 12  road_<id>_2 → befriended 後に二幕目が解錠して launch
+       └ 13  bond_*_03 の選択肢 inline 加成（`-> +2` 矢印修正）の回帰
 A1–A4  提案A — 密書 milestone triggers、fenced choice branching
+       └ A3 に mio affection 断言追加（letter_02 の `-> +1mio` 矢印修正）
 B1–B6  提案B — 同行者 invite、passive、damage absorb、3 reducer hooks、composite trigger
+       └ B5b  three_flowers の選択肢多人 inline 加成（`-> +2×3` 矢印修正）
 C1–C4  提案C — 鬼の交渉、selfSwitch、yaodao_voice gate、zone_haunt 解錠
-D1–D3  提案D — pulse imbue、hell_gate gate、upgrade_oni cost
+D1–D4  提案D — pulse imbue、hell_gate gate、upgrade_oni cost、水鏡欠如で hell_gate ロック（D2 負例）
 DE1    提案D+E 結 — ending_pure_rite で gameEnd
 E1–E3  提案E — infoshop tiers、onScriptSelect redirect、intellect gate
 F1–F2  收尾 — onStateMutated achievement log、onLabelEnter
@@ -156,3 +167,20 @@ F1–F2  收尾 — onStateMutated achievement log、onLabelEnter
 
 - **parser/condition.ts `selfSwitch`**：engine の `evaluateCondition` と validator は selfSwitch を理解していたが、parser がフロントマターから読めなかった（条件 AST の漏れ）。15 行追加で修正。
 - **`onChoicePresented` の意味的制限**：reducer は option を **ADD** できる（visual に追加可）が、`runScript` は ピックを `beat.options[index]` で再解決するため、追加 option は dispatch 不能。よって reducer は **filter / lock** にのみ使うべき。コメントで note 追加（modules/raid.ts onChoicePresented）。
+
+## 内容 bug（this branch で fix）— 澪線の補完
+
+- **水鏡（mizukagami）が入手不能 → hell_gate が到達不能だった**：`chainUnlocked()` は地獄門の解錠に `mizukagami` を要求し、skill 定義 / hell_gate map / D2 fixture もすべて存在していた。だが**この技を伝授する script が無かった**——澪は `bond_mio_03` だけを持ち、`bond_mio_01 / 02` が欠落していた（篝・霞は三段揃い）。結果、ゲーム内で水鏡を学ぶ術が無く、終盤 chain 全体が dead content 化していた。
+  - 補完：`scripts/bond_mio_01.md`（査問する者 / 親密度≥2）+ `scripts/bond_mio_02.md`（水鏡を授ける / ≥4、`learn: [mizukagami]` + `learnedMizukagami` switch）。邦絆ループは完全データ駆動なので module 改変は不要——`buildHubMenu` が `bond_mio_*` を自動で surface する。
+  - 回帰：`09_bond_mio_grants_mizukagami`（05/06 の三人目ミラー、入手経路を証明）+ `D4_hell_gate_locked_without_mizukagami`（D2 の負例、水鏡が binding constraint であることを証明）。
+- **新敵「鏡鬼」(`enemies/kagami_oni.md`)**：到達可能になった地獄門・映し井戸の主。覗き込む者の妖気を写し取り、その太刀筋で襲う（高 cunning）。放すと `zone_haunt_kagami_oni`（澪の水鏡と主題が呼応）を解錠。敵は完全データ駆動なので `.md` 追加 + encounter_table への参照のみ、コード 0 行。
+
+## 同行体験の拡張 — 「道連れ」を剧情にする
+
+同行システムは passive + ダメージ肩代わり止まりで、「共に歩く」物語が薄かった。二層を追加：
+
+- **同行道中シーン・二档 (`scripts/road_<id>.md` + `road_<id>_2.md`)**：同行者を連れて静かな新 zone に着くと、その同行者の道中会話が流れる。一幕目（`road_<id>`）はそのまま、二幕目（`road_<id>_2`）は befriended（生還を共にした）後に解錠——`maybeLaunchRoadScene` が未観の最上位档を選んで launch。`moveHandler` が character_spawns と同じ要領で `currentScriptId` を立てる（遭遇の無い zone 限定なので戦闘と競合しない）。各シーンの effects ブロックが `road_<id>(_2)_seen` を立てて再発火を止め、選択肢で親密度が動く。switch 六つを `game.yaml` に追加。
+- **澪の同行 passive「水鏡 scry」(`mioScry`)**：澪同行中は新 zone に着くたび、接続する未踏 zone の鬼を先読みナレーション。`MapInstance.encounterRolled` guard を新設し、scry が roll した encounter を実際の到達時に再 roll しないことで「水鏡に映る」予言を**真**にする。これで三同行者の passive 欄が全て埋まる（篝=spectral減、霞=flee成功、澪=scry）。
+- **選択肢 inline 加成の修正（全箇所）**：`parseChoiceBlock` は `->` の後ろしか effects を読まない。矢印無しで書かれ **affection が全く加算されていなかった** 選択肢を全て `- 「…」 -> +N<id>` 形へ修正：`bond_{kagari,kasumi,mio}_03`（route 頂点の三択）、`letter_02_rival`（`-> +1mio`）、`three_flowers_alliance`（`-> +2kagari +2kasumi +2mio`、`parseInlineEffects` が一 tail 内の複数 token を全適用）。`road_*` も同形式。これで矢印無しの未加算選択肢は残っていない。
+- **CG 配線（情感の峰のみ）**：CG は「章/節目の beat」に絞る設計方針に沿い、(a) 描き上がっているのに未配線だった既存 CG 9 枚を `:cg` で接続（`encounter_kagari/kasumi_first`、`letter_02/03`、`pulse_intro`、`three_flowers_alliance`、`ending_*` ×3）、(b) 視覚的空白だった**各 route の頂点 `bond_<id>_03`** に新 CG spec を追加（`assets/cgs/bond-{kagari,kasumi,mio}-03/`）、(c) 同行道中シーンに `assets/cgs/road-{kagari,kasumi,mio}/`。gameplay に戻る script は `:hide-cg` も付与（視覚 beat は runScript 上で自動進行＝`next` を消費しないので既存 fixture の drain 数に影響なし）。新規 spec の画像は未生成——`placeholder` で TUI フォールバックし、後から画像 + tui.ans/txt を差し込めばそのまま表示される。日常 beat（bond_01/02、戦闘、zone_haunt）には CG を付けず、峰の印象を保つ。
+- 回帰：`10`（一幕 launch）/ `11`（水鏡 scry）/ `12`（二幕 befriended gate）/ `13`（bond_*_03 矢印修正）。

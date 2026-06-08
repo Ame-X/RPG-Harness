@@ -74,3 +74,7 @@ assertions:
   - kind: state
     path: runtime.firedTriggers
     includes: letter_02_dispatch
+  # 「同行を頼む」(index 0, -> +1mio) — inline 加成が効く（矢印修正）
+  - kind: state
+    path: baseline.characters.mio.affection
+    eq: 1

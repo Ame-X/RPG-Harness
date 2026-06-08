@@ -1,0 +1,44 @@
+name: 提案D：水鏡を欠くと hell_gate は依然ロック（D2 の負例）
+description: |
+  Complement to D2. D2 seeds mizukagami directly and proves the gate
+  OPENS when all four conditions hold. But D2 never proves mizukagami
+  is the binding constraint. Here we seed everything D2 does EXCEPT
+  mizukagami (pulse_oni>=8, power>=12, chinkonho known) and confirm
+  depart:hell_gate is NOT surfaced — dispatching it is a no-op and the
+  raid stays null. Together with fixture 09 (which proves mizukagami is
+  now obtainable via bond_mio_02), this closes the loop: the endgame
+  chain is reachable, but only through 澪's bond route.
+state:
+  baseline:
+    completedScripts:
+      - 000_intro
+    knownSkills:
+      - chinkonho
+    weapons:
+      ancestor_yaodao:
+        power: 14
+    characters:
+      player:
+        stats:
+          hp: 30
+          mental: 8
+          spectral: 25
+          intellect: 5
+    variables:
+      pulse_oni: 8
+  runtime:
+    firedTriggers: []
+  sengoku-raid:
+    metCharacters: []
+    companion: null
+    companionHp: 0
+    pulsePending: null
+    raid: null
+inputs:
+  - type: doActivity
+    id: depart:hell_gate
+  - type: next
+assertions:
+  - kind: state
+    path: sengoku-raid.raid
+    eq: null

@@ -8,6 +8,8 @@ requires:
     - { variable: { name: pulse_pure, min: 5 } }
 ---
 
+:cg assets/cgs/ending-pure-rite
+
 @narrator 公儀の沙汰に従い、お主は浄の脈を選び切った。
 
 @narrator 大広間。将軍家の側用人、澪、そして篝が並ぶ。

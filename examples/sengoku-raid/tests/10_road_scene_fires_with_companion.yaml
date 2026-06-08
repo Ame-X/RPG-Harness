@@ -1,0 +1,78 @@
+name: 同行道中：篝を連れて静かな新 zone に着くと road_kagari が一度だけ流れる
+description: |
+  同行システムの「剧情」レイヤー。篝を同行させて raid 中、初めて遭遇の無い
+  新 zone（ここでは crossroads を encounterRolled:true + encounter:null で
+  強制的に静かにする）に着くと、moveHandler が road_kagari を launch する。
+  シーンの effects ブロックが road_kagari_seen を立て affection を加える。
+  crossroads には kagari の character_spawn があるが、kagari は既に
+  metCharacters に居るので spawn はスキップされ、道中シーンへ到達する。
+  spectral=0 で篝 passive のナレーションを抑え、drain を単純化。
+state:
+  baseline:
+    completedScripts:
+      - 000_intro
+    weapons:
+      ancestor_yaodao: { power: 6 }
+    characters:
+      player:
+        stats: { hp: 30, mental: 8, spectral: 0, intellect: 5 }
+      kagari:
+        stats: { affection: 5 }
+    switches:
+      companion_kagari: true
+    currentMapId: kuro_swamp_edge
+  sengoku-raid:
+    metCharacters:
+      - kagari
+    companion: kagari
+    companionHp: 10
+    raid:
+      chain: kuro_swamp
+      entryMapId: kuro_swamp_edge
+      turnsTaken: 0
+      pendingLoot: {}
+      visited:
+        kuro_swamp_edge:
+          visited: true
+          searched: false
+          encounter: null
+          encounterCleared: false
+          pendingLoot: {}
+        kuro_swamp_crossroads:
+          visited: false
+          searched: false
+          encounter: null
+          encounterRolled: true
+          encounterCleared: false
+          pendingLoot: {}
+inputs:
+  - { type: doActivity, id: "move:kuro_swamp_crossroads" }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: choose, index: 1 }   # 「なら、ずっと鳴らしていよう」 +2kagari
+  - { type: next }
+  - { type: next }
+  - { type: next }
+assertions:
+  - kind: state
+    path: baseline.switches.road_kagari_seen
+    eq: true
+  - kind: state
+    path: baseline.completedScripts
+    includes: road_kagari
+  # 5 (seed) + 2 (choice) + 1 (effects block) = 8
+  - kind: state
+    path: baseline.characters.kagari.affection
+    eq: 8
+  - kind: state
+    path: sengoku-raid.raid.chain
+    eq: kuro_swamp
+  - kind: state
+    path: baseline.currentMapId
+    eq: kuro_swamp_crossroads

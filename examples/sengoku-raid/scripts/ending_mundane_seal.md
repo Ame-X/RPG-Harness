@@ -8,6 +8,8 @@ requires:
     - { variable: { name: pulse_mundane, min: 5 } }
 ---
 
+:cg assets/cgs/ending-mundane-seal
+
 @narrator お主は黙して公儀から退き、家伝の妖刀を山中の祠に納めた。
 
 @narrator 神主が一人、お主を見送る。お主の名は記録には残らない。

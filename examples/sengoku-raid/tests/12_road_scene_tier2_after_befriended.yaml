@@ -1,0 +1,75 @@
+name: 同行道中・二幕：befriended 後、一幕を観た同行者と静かな zone で road_<id>_2
+description: |
+  道中シーンの第二档。一幕（road_kasumi_seen）を観た上で befriended_kasumi
+  （生還を共にした）が立っていると、次に静かな新 zone へ着いた時 moveHandler が
+  road_kasumi_2 を launch する。kagari を metCharacters に入れて crossroads の
+  spawn を抑止し、crossroads を encounterRolled:true + encounter:null で静かに
+  固定。選択肢 index0（+2kasumi）+ effects(+1) で affection 5→8。
+state:
+  baseline:
+    completedScripts:
+      - 000_intro
+    weapons:
+      ancestor_yaodao: { power: 6 }
+    characters:
+      player:
+        stats: { hp: 30, mental: 8, spectral: 0, intellect: 5 }
+      kasumi:
+        stats: { affection: 5 }
+    switches:
+      companion_kasumi: true
+      befriended_kasumi: true
+      road_kasumi_seen: true
+    currentMapId: kuro_swamp_edge
+  sengoku-raid:
+    metCharacters:
+      - kagari
+      - kasumi
+    companion: kasumi
+    companionHp: 10
+    raid:
+      chain: kuro_swamp
+      entryMapId: kuro_swamp_edge
+      turnsTaken: 0
+      pendingLoot: {}
+      visited:
+        kuro_swamp_edge:
+          visited: true
+          searched: false
+          encounter: null
+          encounterCleared: false
+          pendingLoot: {}
+        kuro_swamp_crossroads:
+          visited: false
+          searched: false
+          encounter: null
+          encounterRolled: true
+          encounterCleared: false
+          pendingLoot: {}
+inputs:
+  - { type: doActivity, id: "move:kuro_swamp_crossroads" }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: choose, index: 0 }   # 「なら、お前を失くすわけにはいかないな」 +2kasumi
+  - { type: next }
+  - { type: next }
+  - { type: next }
+assertions:
+  - kind: state
+    path: baseline.switches.road_kasumi_2_seen
+    eq: true
+  - kind: state
+    path: baseline.completedScripts
+    includes: road_kasumi_2
+  # 5 (seed) + 2 (choice) + 1 (effects) = 8
+  - kind: state
+    path: baseline.characters.kasumi.affection
+    eq: 8
+  - kind: state
+    path: baseline.currentMapId
+    eq: kuro_swamp_crossroads

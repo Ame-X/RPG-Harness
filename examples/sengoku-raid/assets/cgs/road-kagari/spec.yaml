@@ -1,0 +1,26 @@
+kind: cg
+description: |
+  篝と並んで夜道を歩く同行 CG。槍を担いだ篝が半歩前を行き、
+  主人公と足音を合わせる。二人の影が一本の道に伸びる。
+prompt: |
+  Cinematic anime visual novel CG, simplified colors, bold cel shading,
+  high contrast, large readable silhouettes for chafa/TUI conversion.
+  Night travel scene on a narrow mountain road. Kagari, a young female
+  warrior in black armor carrying a long spear over one shoulder, walks
+  half a step ahead beside the unseen protagonist, glancing back slightly.
+  Two long shadows stretch down the moonlit path. Quiet, companionable
+  mood. Strong moon rim light, limited palette, clean background masses,
+  16:9.
+placeholder: "[CG] 夜道、槍を担ぐ篝が半歩前で足音を合わせる"
+refs:
+  characters: [ kagari, player ]
+  location: mountain-road
+  time: 夜
+size_hint:
+  tui: { cols: 80, rows: 30 }
+  web: { aspect: "16:9" }
+tags: [ companion, road-scene, kagari ]
+tui_render:
+  symbols: half
+  colors: "16"
+  dither: diffusion

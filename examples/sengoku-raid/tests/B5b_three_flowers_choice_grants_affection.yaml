@@ -1,0 +1,57 @@
+name: 三花の盟：選択肢の多人 inline 加成（-> +2kagari +2kasumi +2mio）が効く
+description: |
+  B5 と同じ seed（三人 befriended → 起動時に three_flowers_alliance が trigger
+  で launch）。本テストはそのシーンを drain し、二肢目（覚悟の +2×3）を選んで、
+  parseInlineEffects が一つの tail 内の複数 +token を全て適用することを確認する
+  （矢印修正の回帰、多人版）。三人とも affection 0→2。
+state:
+  baseline:
+    completedScripts:
+      - 000_intro
+      - letter_01_suspicion
+      - letter_02_rival
+    switches:
+      befriended_kagari: true
+      befriended_kasumi: true
+      befriended_mio: true
+    variables:
+      raidsCompleted: 6
+      shogun_chapter: 1
+  runtime:
+    firedTriggers:
+      - letter_01_dispatch
+  sengoku-raid:
+    metCharacters:
+      - kagari
+      - kasumi
+      - mio
+    companion: null
+    companionHp: 0
+    raid: null
+inputs:
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: choose, index: 1 }   # 「共に死ぬ覚悟」 -> +2kagari +2kasumi +2mio
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+assertions:
+  - kind: state
+    path: baseline.completedScripts
+    includes: three_flowers_alliance
+  - kind: state
+    path: baseline.characters.kagari.affection
+    eq: 2
+  - kind: state
+    path: baseline.characters.kasumi.affection
+    eq: 2
+  - kind: state
+    path: baseline.characters.mio.affection
+    eq: 2

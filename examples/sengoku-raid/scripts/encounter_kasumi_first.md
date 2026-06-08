@@ -4,6 +4,8 @@ title: 石畳の道での出会い
 characters: [kasumi]
 ---
 
+:cg assets/cgs/encounter-kasumi-first
+
 矢が一本、お主の鼻先を掠めて石に刺さった。
 
 @narrator 振り向く間もなく、樹の上から声が降ってくる。
@@ -34,5 +36,7 @@ characters: [kasumi]
 @kasumi 飢えてるね、これ。あたしは弓だから関係ないけど、あんた、気をつけな。
 
 @kasumi 山で見かけたら声かけるよ。
+
+:hide-cg
 
 [end]

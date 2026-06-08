@@ -4,6 +4,8 @@ title: 三花の盟
 characters: [kagari, kasumi, mio]
 ---
 
+:cg assets/cgs/three-flowers-alliance
+
 深夜。大名府の中庭。三人の女が並んで立っている。
 
 @kagari 召されたのは私一人ではないらしいな。
@@ -19,8 +21,8 @@ characters: [kagari, kasumi, mio]
 @narrator 「鬼を狩る生き方が、いつ終わるか、私には見えない。だが、終わるその日まで——」
 
 ? それでも、口にしたかった。
-  - 「三人とも、隣にいてくれ」 +kagari +kasumi +mio
-  - 「お主たちと共に死ぬ覚悟を、私は持っている」 +2kagari +2kasumi +2mio
+  - 「三人とも、隣にいてくれ」 -> +kagari +kasumi +mio
+  - 「お主たちと共に死ぬ覚悟を、私は持っている」 -> +2kagari +2kasumi +2mio
 
 @kagari 私の槍は、お主の刀の後ろを守る。
 
@@ -29,6 +31,8 @@ characters: [kagari, kasumi, mio]
 @mio 私の鏡は、お主の刀が映す影を読む。
 
 @narrator 三人の声が一度に降りる。中庭の月が、いつもより低く見えた。
+
+:hide-cg
 
 ```yaml
 type: effects

@@ -1,0 +1,26 @@
+kind: cg
+description: |
+  澪と並んで水辺に立つ同行 CG。澪が刀身を傾けて流れに重ね、
+  二人の影が浅瀬に並んで映る。澪の影はもう揺れていない。
+prompt: |
+  Cinematic anime visual novel CG, simplified colors, bold cel shading,
+  high contrast, large readable silhouettes for chafa/TUI conversion.
+  Riverside at dusk, still shallow water like a mirror. Mio, a composed
+  young woman in a deep indigo over-robe (uchikake) with a short sword at
+  her waist, tilts her blade to lay its reflection across the water while
+  standing beside the unseen protagonist. Two reflections sit side by side
+  in the shallows. Cold-warm dusk light, limited palette, clean
+  background masses, 16:9.
+placeholder: "[CG] 夕の水辺、澪が刀身を流れに重ね二つの影が並ぶ"
+refs:
+  characters: [ mio, player ]
+  location: riverside
+  time: 夕
+size_hint:
+  tui: { cols: 80, rows: 30 }
+  web: { aspect: "16:9" }
+tags: [ companion, road-scene, mio ]
+tui_render:
+  symbols: half
+  colors: "16"
+  dither: diffusion

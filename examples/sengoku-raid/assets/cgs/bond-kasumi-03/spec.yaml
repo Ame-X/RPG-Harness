@@ -1,0 +1,26 @@
+kind: cg
+description: |
+  霞との邦絆頂点 CG。朝、山際の尾根道。霞が主人公のすぐ隣に立ち、
+  足元の鹿の蹄の跡を指差す——鬼の足跡を避けて回り込む三つの蹄跡。
+  二人の距離は近く、霞は明るく笑っている。
+prompt: |
+  Cinematic anime visual novel CG, simplified colors, bold cel shading,
+  high contrast, large readable silhouettes for chafa/TUI conversion.
+  Morning mountain ridge trail. Kasumi, a young huntress with a longbow on
+  her back, stands close beside the unseen protagonist and points down at
+  three deer hoofprints curving around larger oni footprints in the dirt.
+  She smiles brightly, shoulder near the protagonist's. Warm low morning
+  sun, limited palette, clean background masses, 16:9.
+placeholder: "[CG] 朝の尾根、霞が隣で鹿の蹄の跡を指して笑う"
+refs:
+  characters: [ kasumi, player ]
+  location: mountain-ridge
+  time: 朝
+size_hint:
+  tui: { cols: 80, rows: 30 }
+  web: { aspect: "16:9" }
+tags: [ bond, route-peak, kasumi ]
+tui_render:
+  symbols: half
+  colors: "16"
+  dither: diffusion

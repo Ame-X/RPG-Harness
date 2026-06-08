@@ -1,0 +1,47 @@
+name: 高羁绊触发 bond_mio_02 → 学到 mizukagami；澪线补完
+description: |
+  Third character mirror of fixtures 05 (kagari) / 06 (kasumi). Seeds
+  mio met + affection=4, dispatches bond_mio_02, asserts mizukagami is
+  granted and learnedMizukagami switch flips. This closes the gap where
+  澪 had only bond_mio_03 and her skill — the hell_gate gate's hard
+  requirement — was never obtainable in-game.
+state:
+  baseline:
+    completedScripts:
+      - 000_intro
+    characters:
+      mio:
+        affection: 4
+        custom: {}
+  sengoku-raid:
+    raid: null
+    metCharacters:
+      - mio
+inputs:
+  - type: doActivity
+    id: script:bond_mio_02
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+assertions:
+  - kind: state
+    path: baseline.knownSkills
+    includes: mizukagami
+  - kind: state
+    path: baseline.completedScripts
+    includes: bond_mio_02
+  - kind: state
+    path: baseline.characters.mio.affection
+    eq: 5
+  - kind: state
+    path: baseline.switches.learnedMizukagami
+    eq: true
