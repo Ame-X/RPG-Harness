@@ -36,7 +36,17 @@ inputs:
   - { type: next }
   - { type: next }
   - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
   - { type: choose, index: 1 }   # 「共に死ぬ覚悟」 -> +2kagari +2kasumi +2mio
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
+  - { type: next }
   - { type: next }
   - { type: next }
   - { type: next }

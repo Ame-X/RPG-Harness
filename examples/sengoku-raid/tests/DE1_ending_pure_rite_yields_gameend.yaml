@@ -66,6 +66,14 @@ inputs:
   - type: next
   - type: next
   - type: next
+  # 儀のあとの「最初に、誰のところへ歩く？」— befriended が一つも無い
+  # ので 0-2（篝/霞/澪）は locked、index 3（一人で）だけ available。
+  - type: choose
+    index: 3
+  - type: next
+  - type: next
+  - type: next
+  - type: next
   - type: next
 assertions:
   - kind: state

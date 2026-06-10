@@ -1,0 +1,59 @@
+name: bond_kagari_04 — affection 8 + bond_03 完了 + road_2 既読で「長い夜の答え」が解放される
+description: |
+  bond_kagari_01 で篝が逃げた問い（「伯母を斬って後悔したのか」）の
+  回収シーン。requires は affection>=8 / scriptCompleted bond_kagari_03 /
+  road_kagari_2_seen の三点 AND。完走すると affection は 8 +2(選択肢)
+  +1(effects) = 11 になる。
+state:
+  baseline:
+    completedScripts:
+      - 000_intro
+      - encounter_kagari_first
+      - bond_kagari_01
+      - bond_kagari_02
+      - bond_kagari_03
+    characters:
+      kagari:
+        affection: 8
+        custom: {}
+    switches:
+      befriended_kagari: true
+      road_kagari_seen: true
+      road_kagari_2_seen: true
+  sengoku-raid:
+    raid: null
+    metCharacters:
+      - kagari
+maxSteps: 60
+inputs:
+  - type: doActivity
+    id: script:bond_kagari_04
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: choose
+    index: 0
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+  - type: next
+assertions:
+  - kind: state
+    path: baseline.completedScripts
+    includes: bond_kagari_04
+  - kind: state
+    path: baseline.characters.kagari.affection
+    eq: 11
